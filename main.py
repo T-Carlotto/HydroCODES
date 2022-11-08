@@ -72,7 +72,10 @@ if file is not None:
 
     df= pd.read_csv(file)
 
-    RES_xlsx = to_excel(df)
+    results = df
+    results1 = pd.DataFrame()
+    results2 = pd.DataFrame()
+    results3 = pd.DataFrame()
 
     with tab2:
         ax.plot(df['Time'], df['StreamFlow'])
@@ -108,23 +111,36 @@ if file is not None:
             for ifn in range(len(option)):
                 if (option[ifn] == 'Chapman'):
                     Q_CH = Chapman_filter(df, alpha_ch)
+                    results1 = pd.DataFrame({'Chapman': Q_CH})
+                    results = pd.concat([results, results1], axis=1, join="inner")
+
                     with tab2:
                         ax.plot(df['Time'], Q_CH)
                         plt.axis([min(df['Time']), max(df['Time']), min(Q_CH), max(df['StreamFlow'])])
 
                 if (option[ifn] == 'Lyne-Hollick'):
                     Q_LH = Lyne_Hollick_filter(df, alpha_lh)
+                    results2 = pd.DataFrame({'Lyne-Hollick': Q_LH})
+                    results = pd.concat([results, results2], axis=1, join="inner")
+
                     with tab2:
                         ax.plot(df['Time'], Q_LH)
                         plt.axis([min(df['Time']), max(df['Time']), min(Q_LH), max(df['StreamFlow'])])
 
                 if (option[ifn] == 'Eckhardt'):
                     Q_EK = Eckhardt_filter(df, alpha_ek, BFI_max)
+                    results3 = pd.DataFrame({'Eckhardt': Q_EK})
+                    results = pd.concat([results, results3], axis=1, join="inner")
+
                     with tab2:
                         ax.plot(df['Time'], Q_EK)
                         plt.axis([min(df['Time']), max(df['Time']), min(Q_EK), max(df['StreamFlow'])])
             with tab2:
-                st.download_button(label='📥 Download Current Result',data=RES_xlsx,file_name='Lyne-Hollick.xlsx')
+
+                #results = pd.concat([df, results], axis = 1, join = "inner")
+
+                RES_xlsx = to_excel(results)
+                st.download_button(label='📥 Download Current Result',data=RES_xlsx,file_name='FilterResults.xlsx')
     with tab2:
         plt.xlabel('Time')
         plt.ylabel('Streamflow')
