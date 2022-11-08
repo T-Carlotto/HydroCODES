@@ -107,7 +107,7 @@ if file is not None:
                                            max_value=1.000, step=0.001, disabled=False, label_visibility="visible")
 
     if (option):
-        if (st.sidebar.button(label='Run')):
+        #if (st.sidebar.button(label='Run')):
             for ifn in range(len(option)):
                 if (option[ifn] == 'Chapman'):
                     Q_CH = Chapman_filter(df, alpha_ch)
@@ -136,9 +136,6 @@ if file is not None:
                         ax.plot(df['Time'], Q_EK)
                         plt.axis([min(df['Time']), max(df['Time']), min(Q_EK), max(df['StreamFlow'])])
             with tab2:
-
-                #results = pd.concat([df, results], axis = 1, join = "inner")
-
                 RES_xlsx = to_excel(results)
                 st.download_button(label='📥 Download Current Result',data=RES_xlsx,file_name='FilterResults.xlsx')
     with tab2:
